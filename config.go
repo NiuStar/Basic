@@ -19,6 +19,7 @@ type serverConfig struct {
 	Cert string `xml:"cert"`
 	Key string `xml:"key"`
 	Websocket bool `xml:"websocket"`
+	Domain string `xml:"domain"`
 }
 
 func (s *serverConfig)GetPort() string {
@@ -65,13 +66,16 @@ func init() {
 }
 
 func initConfig() *Config {
-	data := utils.ReadFileFullPath("./config.xml")
-	var config Config
-	err := xml.Unmarshal([]byte(data),&config)
-	if err != nil {
-		panic(err)
+	if utils.CheckFileIsExist("./Config/config.xml") {
+		data := utils.ReadFileFullPath("./Config/config.xml")
+		var config Config
+		err := xml.Unmarshal([]byte(data),&config)
+		if err != nil {
+			panic(err)
+		}
+		return &config
 	}
-	return &config
+	return nil
 }
 
 func GetServerConfig() *Config {
